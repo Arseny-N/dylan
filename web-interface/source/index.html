@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html>
+
+
+
+
+
+<head>
+    	<title>Test Suite</title>
+	<meta charset="utf-8">
+
+	<script  type="text/javascript">var app = app || {};</script>	    	
+	
+	<!-- <script>document.write('<script src="http://' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1"></' + 'script>')</script> -->
+	
+	
+	 	
+	
+		<link rel="stylesheet" href="stylesheets/bootstrap.css" />
+		<link rel="stylesheet" href="stylesheets/bootstrap-darkly.css" />
+	
+		<link href="stylesheets/codemirror.css" rel="stylesheet" type="text/css" />
+    		<link href="stylesheets/codemirror-theme.css" rel="stylesheet" type="text/css" />
+
+    		<link href="stylesheets/codemirror4-theme.css" rel="stylesheet" type="text/css" />
+    		
+    		<link rel="stylesheet" href="stylesheets/style.css" />    		
+	   	
+	
+
+
+	
+ 	
+ 		<script type="text/javascript" src="javascripts/full/jquery.js"></script>
+	    	<script type="text/javascript" src="javascripts/full/underscore.js"></script>
+		<script type="text/javascript" src="javascripts/full/backbone.js"></script>
+		<script type="text/javascript" src="javascripts/full/backbone.localstorage.js"></script>
+	
+	    	<script type="text/javascript" src="javascripts/full/FileSaver.js"> </script>    	    	
+	 	<script type="text/javascript" src="javascripts/full/mousetrap.js"></script>
+		<script type="text/javascript" src="javascripts/full/codemirror.js"></script>
+		<script type="text/javascript" src="javascripts/full/codemirror-mode.js"></script>
+		<script type="text/javascript" src="javascripts/full/bootstrap.js" > </script>
+ 	
+ 	 	
+ 
+ 	   	<script type="text/javascript" src="javascripts/api.js"></script>
+ 	   	<script type="text/javascript" src="javascripts/standard-libs.js"></script>
+		<script type="text/javascript" src="javascripts/utils.js"></script>	
+		<script type="text/javascript" src="javascripts/documents.js"></script>
+		<script type="text/javascript" src="javascripts/console.js"></script>
+		<script type="text/javascript" src="javascripts/logs.js"></script>
+		<script type="text/javascript" src="javascripts/interpreter.js"></script>
+	
+	
+ 	   	<script type="text/javascript" src="javascripts/app.js"></script>
+		
+
+	
+	
+	<!--
+		<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootswatch/3.2.0/darkly/bootstrap.min.css" />
+		<script src="https://raw.github.com/eligrey/Blob.js/master/Blob.min.js"> </script>
+    		<script src="https://raw.github.com/eligrey/canvas-toBlob.js/master/canvas-toBlob.js"> </script> 
+    	-->
+    	
+	<script  type="text/javascript">
+		$(function () {
+			app.main = new app.AppView({});
+		}); 
+	</script>
+</head>
+
+
+<script type="text/template" class="template doctab script"><a title="Script file" href="#" role="tab" data-toggle="tab"  name-attribute="<%- name %>"><div class="file-name"><%- name %> <span class="label label-success label-small" >S</span></div><form class="hidden"><input type="text" class="form-control" placeholder="<%- name %>"><br><button type="submit" class="btn btn-default btn-block">Submit</button></form></a></script>
+
+
+<script type="text/template" class="template doctab binary"><a title="Binary file" href="#" role="tab" data-toggle="tab" name-attribute="<%- name %>"><%- name %> <span class="label label-default label-small" >B</span><form class="hidden"><input type="text" class="form-control" placeholder="<%- name %>"><br><button type="submit" class="btn btn-default btn-block">Submit</button></form></a></script>  
+
+
+<script type="text/template" class="template doctab text"><a title="Text file" href="#" role="tab" data-toggle="tab" name-attribute="<%- name %>"><%- name %> <span class="label label-info label-small" >T</span><form class="hidden"><input type="text" class="form-control" placeholder="<%- name %>"><br><button type="submit" class="btn btn-default btn-block">Submit</button></form></a></script>    
+
+
+<script type="text/template" class="template logger-src-entry"><td><%-emitter%></td><td><%-context%></td><td><%-prio%></td><td><%-body%></td></script>
+
+<script type="text/template" class="template logger-mc-entry"><td><%-body%></td></script> 		  
+
+<script type="text/template" class="template logger-console-entry"><td><%-body%></td></script>  
+
+
+
+
+<body>
+	<!-- Navbar -->
+	<div class="row">
+	<div class="col-sm-12"  >	
+		
+
+<nav class="navbar navbar-inverse" role="navigation" id="navbar">  		
+	<ul class="nav navbar-nav">
+		<li class="divider-vertical" ><a href="#">Script Editor</a></li>		
+	
+ 		<li class="dropdown">
+			<a href="#" class="dropdown-toggle" data-toggle="dropdown"> Shortcuts <span class="caret"></span></a>
+			<ul class="dropdown-menu" role="menu" id="cheatsheet">
+				 <li class="dropdown-header"> Documents Management </li>  
+							<li>
+
+								<a href="#" >
+									<kbd> ctrl+o </kbd>
+									   Open script file 
+								</a>
+							</li>
+						 
+							<li>
+
+								<a href="#" >
+									<kbd> ctrl+p </kbd>
+									   Open text file 
+								</a>
+							</li>
+						 
+							<li>
+
+								<a href="#" >
+									<kbd> ctrl+k </kbd>
+									   Create script file 
+								</a>
+							</li>
+						 
+							<li>
+
+								<a href="#" >
+									<kbd> ctrl+l </kbd>
+									   Create text file 
+								</a>
+							</li>
+						 <li class="divider"></li>  <li class="dropdown-header"> Editor </li>  
+							<li>
+
+								<a href="#" >
+									<kbd> alt+w </kbd>
+									   Close doc 
+								</a>
+							</li>
+						 
+							<li>
+
+								<a href="#" >
+									<kbd> alt+&lt;N&gt; </kbd>
+									   Go to doc &lt;N&gt; 
+								</a>
+							</li>
+						 
+							<li>
+
+								<a href="#" >
+									<kbd> ctrl+alt+pgup </kbd>
+									   Right doc 
+								</a>
+							</li>
+						 
+							<li>
+
+								<a href="#" >
+									<kbd> ctrl+alt+pgdown </kbd>
+									   Left doc 
+								</a>
+							</li>
+						 
+							<li>
+
+								<a href="#" >
+									<kbd> ctrl+s </kbd>
+									   Save docs 
+								</a>
+							</li>
+						 <li class="divider"></li>  <li class="dropdown-header"> Interpreter </li>  
+							<li>
+
+								<a href="#" >
+									<kbd> alt+r </kbd>
+									   Run script 
+								</a>
+							</li>
+						 <li class="divider"></li>  <li class="dropdown-header"> Navigation </li>  
+							<li>
+
+								<a href="#" >
+									<kbd> alt+h </kbd>
+									   Shortcuts cheat-sheet 
+								</a>
+							</li>
+						
+			</ul>
+		</li>
+	</ul> 
+</nav>
+
+	</div>
+	</div>
+	<div id="file-hidden-input">
+		<input type="file" id="opened-documents" name="documents[]" class="hidden"/>
+	</div>
+
+
+	<section id="editor" >
+
+
+	
+	<div class="row">
+	<div class="col-sm-6"  >	
+		
+		<!-- Editor Toolbar -->
+		<div class="row">
+		<div class="col-sm-12"  >
+			<div  class="btn-group btn-group-justified" id="editor-toolbar">
+	<div class="btn-group">
+		<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+			 File <span class="caret"></span>
+   		</button>   				
+    		<ul class="dropdown-menu" role="menu">
+    		
+			<li class="dropdown-header">Open file </li>
+			<li><a id="add-disk-script">Script</a></li>
+			<li><a id="add-disk-text">Text</a></li>
+			<li class="divider"></li>
+			
+			<li class="dropdown-header">Create file</li>
+			<li><a id="add-doc-empty">Script</a></li>
+			<li><a id="add-text-doc-empty">Text</a></li>
+			<li class="divider"></li>
+			
+			<li><a id="download">  Download </a> </li>
+			<li><a id="save"> Save locally </a> </li>
+			<li><a id="copy-to-clbd"> To clipboard</a> </li>
+
+			<li class="divider"></li>
+			<li><a id="close-doc"> Close</a>   </li>
+			<li><a id="rename-doc"> Rename</a>  </li>
+		</ul>
+	</div>
+											
+  	<a class="btn btn-default" id="run-doc">
+  		Run
+	</a>
+</div>
+
+  		</div>
+  		</div>
+  		
+  		<br>
+  		
+		<!-- Editor/Console  -->
+		<div class="row">
+		<div class="col-sm-12"  >
+
+	  		
+			<div id="script-editor">
+				<!-- Editor Tabs -->  		
+				<ul class="nav nav-tabs" role="tablist" id="editor-tabs" >
+		  
+				</ul>
+				<div id="cm-script-editor"></div>		
+			</div>					
+		</div>
+  		</div>
+			
+  		
+	</div>
+	
+	<br class="hidden-lg hidden-md hidden-sm">
+	
+	<div class="col-sm-6" >	
+			<!-- Logger Toolbar -->
+			<div class="row">
+			<div class="col-sm-7"  >
+				<div class="btn-group btn-group-justified" id="logger-toolbar">
+					<a class="btn btn-default" id="copy-to-clbd"> To clipboard</a>
+  					<a class="btn btn-default" id="clear"> Clear</a>
+		 		</div>
+		 	</div>
+		 	<div class="col-sm-5"  >
+		 		<br class="hidden-lg hidden-md hidden-sm">
+		 			
+		 		<div id="logger-regexp" class="form-dark">		
+					<input type="text" class="form-control"  placeholder="Enter here an emitter filter regexp.">
+				</div>
+		 	</div>
+	  		</div>
+	  		<br>
+
+
+
+	  		
+			<!-- Logger "Window"-->	  		
+			<div class="row">
+			<div class="col-sm-12"  id="logger" >				
+				<ul class="nav nav-tabs" role="tablist" id="logger-tabs" >
+		  			<li class="active"><a role="tab" data-toggle="tab" id="script-tab"> Script Debug</a> </li>
+		  			<li><a role="tab" data-toggle="tab" id="chip-tab"> Chip Debug</a> </li>
+		  			<li>  				  				
+		  				<a role="tab" data-toggle="tab" id="console-tab"> 
+		  					
+		  					Console
+		  				</a> 
+		  			</li>
+				</ul>
+				<div id="logger-container" class="no-top">	
+					<table class="table  table-condensed  table-hover" ></table>		
+				</div>
+				<br>
+				<div class="console hidden" >
+					<div id="input" >
+						<div ></div>		
+					</div>
+				</div>
+		 	</div>
+	  		</div>	  				  		
+			
+	</div>
+	</div>
+	<br>		
+ 	<!-- Currnt operation "Window"-->	  		
+	<div class="row">
+	<div class="col-sm-12"  >				
+		<div class="well well-sm" id="current-op">
+
+		Current operation:
+		<span> </span>			
+
+		</div>
+	</div>
+	</div>  	
+	
+
+	
+	
+	</section>
+
+   
+</body>
+
+
+
+
+</html>

@@ -1,0 +1,105 @@
+<html><head><meta charset="UTF-8"><link type="text/css" rel="stylesheet" href="style.css"></head><body><div class="container"><p><a href="index.html"><strong>&lt; Back</strong></a></p>
+<h1 id="server-api">Server API</h1>
+<p>All API calls are sent througt http POST requests.
+Their results are sent as POST-back. </p>
+<hr>
+<h4 id="register-i-o">Register I/O</h4>
+<ul>
+<li><strong>Read</strong><ul>
+<li><strong>Request URL</strong>: <code>/api/1</code></li>
+<li><strong>Request Data</strong>:<pre><code class="lang-json"><div class="highlight"><pre><span class="p">{</span> 
+<span class="s2">&quot;req&quot;</span> <span class="o">:</span> <span class="p">[</span> <span class="o">&lt;</span><span class="nx">register</span> <span class="nx">address</span><span class="o">&gt;</span> <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+
+</code></pre>
+</li>
+<li><strong>Result</strong>:<ul>
+<li><strong>On error</strong>: HTTP error code + error message</li>
+<li><strong>On sucess</strong>:<pre><code class="lang-json"><div class="highlight"><pre><span class="p">{</span>
+<span class="s2">&quot;result&quot;</span> <span class="o">:</span> <span class="o">&lt;</span><span class="nx">register</span> <span class="nx">data</span><span class="o">&gt;</span>
+<span class="p">}</span>
+</pre></div>
+
+</code></pre>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li><strong>Write</strong><ul>
+<li><strong>Request to</strong>: <code>/api/2</code></li>
+<li><strong>Request Data</strong>:<pre><code class="lang-json"><div class="highlight"><pre><span class="p">{</span> 
+<span class="s2">&quot;req&quot;</span> <span class="o">:</span> <span class="p">[</span><span class="o">&lt;</span><span class="nx">register</span> <span class="nx">address</span><span class="o">&gt;</span><span class="p">,</span> <span class="o">&lt;</span><span class="nx">register</span> <span class="nx">data</span><span class="o">&gt;</span> <span class="p">]</span>    
+<span class="p">}</span>
+</pre></div>
+
+</code></pre>
+</li>
+<li><strong>Result</strong>:<ul>
+<li><strong>On error</strong>: HTTP error code + error message</li>
+<li><strong>On sucess</strong>:<pre><code class="lang-json"><div class="highlight"><pre><span class="p">{</span>
+<span class="s2">&quot;result&quot;</span> <span class="o">:</span> <span class="s2">&quot;success&quot;</span>
+<span class="p">}</span>
+</pre></div>
+
+</code></pre>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h4 id="memory-i-o">Memory I/O</h4>
+<ul>
+<li><strong>Read</strong><ul>
+<li><strong>Request URL</strong>: <code>/api/3</code></li>
+<li><strong>Request Data</strong>:<pre><code class="lang-json"><div class="highlight"><pre><span class="p">{</span> 
+<span class="s2">&quot;req&quot;</span> <span class="o">:</span> <span class="p">[</span> <span class="o">&lt;</span><span class="nx">memory</span> <span class="nx">address</span><span class="o">&gt;</span><span class="p">,</span> <span class="o">&lt;</span><span class="s2">&quot;base_t&quot;</span> <span class="nx">count</span><span class="o">&gt;</span> <span class="p">]</span>    
+<span class="p">}</span>
+</pre></div>
+
+</code></pre>
+</li>
+<li><strong>Result</strong>:<ul>
+<li><strong>On error</strong>: HTTP error code + error message</li>
+<li><strong>On sucess</strong>:<pre><code class="lang-json"><div class="highlight"><pre><span class="p">{</span>
+<span class="s2">&quot;result&quot;</span> <span class="o">:</span> <span class="p">[</span> <span class="o">&lt;</span><span class="nx">data1</span><span class="o">&gt;</span><span class="p">,</span> <span class="o">&lt;</span><span class="nx">data2</span><span class="o">&gt;</span><span class="p">,</span> <span class="o">&lt;</span><span class="nx">data3</span><span class="o">&gt;</span><span class="p">,</span> <span class="o">&lt;</span><span class="nx">data4</span><span class="o">&gt;</span> <span class="p">...</span> <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+
+</code></pre>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li><strong>Write</strong><ul>
+<li><strong>Request URL</strong>: <code>/api/4</code></li>
+<li><strong>Request Data</strong>:<pre><code class="lang-json"><div class="highlight"><pre><span class="p">{</span>
+<span class="s2">&quot;req&quot;</span> <span class="o">:</span> <span class="p">[</span> <span class="o">&lt;</span><span class="nx">memory</span> <span class="nx">address</span><span class="o">&gt;</span><span class="p">,</span> <span class="p">[</span> <span class="o">&lt;</span><span class="nx">data1</span><span class="o">&gt;</span><span class="p">,</span> <span class="o">&lt;</span><span class="nx">data2</span><span class="o">&gt;</span><span class="p">,</span> <span class="o">&lt;</span><span class="nx">data3</span><span class="o">&gt;</span><span class="p">,</span> <span class="o">&lt;</span><span class="nx">data4</span><span class="o">&gt;</span> <span class="p">...</span> <span class="p">]</span> <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+
+</code></pre>
+</li>
+<li><strong>Result</strong>:<ul>
+<li><strong>On error</strong>: HTTP error code + error message</li>
+<li><strong>On sucess</strong>:<pre><code class="lang-json"><div class="highlight"><pre><span class="p">{</span>
+<span class="s2">&quot;result&quot;</span> <span class="o">:</span> <span class="s2">&quot;success&quot;</span>
+<span class="p">}</span>
+</pre></div>
+
+</code></pre>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div></body></html>

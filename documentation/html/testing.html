@@ -1,0 +1,25 @@
+<html><head><meta charset="UTF-8"><link type="text/css" rel="stylesheet" href="style.css"></head><body><div class="container"><p><a href="index.html"><strong>&lt; Back</strong></a></p>
+<h1 id="testing">Testing</h1>
+<p>This document describe various testing facilities offered by this project.
+You can find them at <em>test-suite/</em> directory.</p>
+<h2 id="server-testing">Server Testing</h2>
+<p>Server testing is done by the means of a test runner called <strong>motcha</strong>, and 
+a test collection called <strong>chai</strong>.</p>
+<p>Mocha and chai use Node.js, so you have to install it on your computer to run them.</p>
+<p>To run all the tests go to <em>test-suite/mocha-tester/</em> and run <strong>mocha</strong>. It will execute
+the following test, using the JSON api offered by the web server :</p>
+<ul>
+<li>Write fixed valuers to registers and test weather the return value equals to &quot;success&quot;.</li>
+<li>Read data form the registers and check weather it is correct (equal to the data previously written).</li>
+<li>Write random data to random addresses of memory and check weather the return value is &quot;success&quot;.</li>
+<li>Read data from memory and compare to the previously written.</li>
+</ul>
+<h2 id="ui-testing">UI Testing</h2>
+<p>Well there are no ui tests, but there is a web server made to facilitate development.
+Go to <em>test-suite/node-server</em> and run <code>node app</code>. You will get to web pages - one 
+on <code>localhost:4000</code> and one on <code>localhost:4004</code>. The former is the development page - 
+the server reads data form the <em>source</em> directory, so everything is not minimized.
+The latter is the development page , the server reads data from the <em>build</em> directory, 
+everything is minimized.</p>
+<p>All register and memory i/o functionality is implemented.</p>
+</div></body></html>

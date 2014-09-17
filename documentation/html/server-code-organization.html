@@ -1,0 +1,217 @@
+<html><head><meta charset="UTF-8"><link type="text/css" rel="stylesheet" href="style.css"></head><body><div class="container"><p><a href="index.html"><strong>&lt; Back</strong></a></p>
+<h1 id="server-code-organization-and-build-system">Server code organization and build system</h1>
+<h4 id="build-system">Build system</h4>
+<p>This program could be build in two ways :</p>
+<ol>
+<li>As a linux executable, using some ported to linux lwip routines. <ul>
+<li>If the program is build as a linux executable then,  data sent to it, is stored in <code>pbuf</code>s,
+netconn functions and friends are implemented with UNIX sockets. All data processing is done 
+with lwip functions for <code>pbuf</code> processing. The ported lwip stack is located at pseudo-lwip/.
+The building process is handled by the makefile (<code>make noos [-B]</code>).</li>
+</ul>
+</li>
+<li>As a freertos task using lwip.<ul>
+<li>If the program is build as a freertos task then,
+the building process is handled by the programmer&#39;s copy and paste skills and the 
+programming environment witch he is using.</li>
+</ul>
+</li>
+</ol>
+<h4 id="code-organization">Code organization</h4>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>generic-json-zero-copy.c, generic-json-zero-copy.h</td>
+<td>Callback based json parser.</td>
+</tr>
+<tr>
+<td>http_server.c http_server.h</td>
+<td>Server main function.</td>
+</tr>
+<tr>
+<td>http-utils.c http-utils.h</td>
+<td>HTTP utilities used by the project</td>
+</tr>
+<tr>
+<td>json_decode.c</td>
+<td>Test program for json parser, might be broken. (Not used by the server)</td>
+</tr>
+<tr>
+<td>low-level-api.c, low-level-api.h</td>
+<td>Low level API used by the server for memory and register i/o.</td>
+</tr>
+<tr>
+<td>macros.h</td>
+<td>Macroses used by the HTTP server.</td>
+</tr>
+<tr>
+<td>makefile</td>
+<td>Makefile.</td>
+</tr>
+<tr>
+<td>network-stack.h</td>
+<td>Header made to allow smooth pseudo-lwip to lwip transition.</td>
+</tr>
+<tr>
+<td>noOS.c</td>
+<td>Linux port of the server.</td>
+</tr>
+<tr>
+<td>post_methods.c, post_methods.h</td>
+<td>Methods called by the server on POST requests.</td>
+</tr>
+<tr>
+<td>pseudo-lwip/</td>
+<td>Pseudo-lwip (linux port).</td>
+</tr>
+<tr>
+<td>wp.h</td>
+<td>The web page</td>
+</tr>
+</tbody>
+</table>
+<h4 id="json-parser">JSON parser</h4>
+<ul>
+<li><strong>Files</strong>: generic-json-zero-copy.c generic-json-zero-copy.h</li>
+<li><strong>Description</strong>: Here the callback json parser is located. More info about its usage could be found in the header.</li>
+<li><strong>Macros</strong>: <ul>
+<li><code>JSON_ERRORS</code> : should be defined if various errors should be printed by the parser.
+Uses <code>fprintf</code> or an <code>error</code> macro if defined.</li>
+<li><code>JSONX_LWIP</code> : if defined the parser is configured for ntbuf parsing.
+Should be <em>always</em> defined for correct functioning of the parser. </li>
+</ul>
+</li>
+<li><strong>Testing</strong>: json_decode.c <code>make json</code></li>
+</ul>
+<h4 id="http-server">HTTP server</h4>
+<ul>
+<li><strong>Files</strong>: http_server.c http_server.h  </li>
+<li><strong>Description</strong>: Here the main server function is located - <code>void handle_request(struct netconn *netconn)</code> 
+some header parser utilities and the <code>server_start()</code>, <code>server_stop()</code> functions.</li>
+<li><strong>Macros</strong>: <ul>
+<li><code>MAX_URL_LEN</code> : the maximum length of a URL specified to the server.
+Example: 196.254.44.44/URL - the length of URL should be less then <code>MAX_URL_LEN</code>.</li>
+</ul>
+</li>
+</ul>
+<h4 id="http-utils">HTTP Utils</h4>
+<ul>
+<li><strong>Files</strong>: http-utils.h http-utils.c     </li>
+<li><strong>Description</strong>: Here some http utilities are located. Most of them concern sending data to the connected client.</li>
+<li><strong>Macros</strong>:<ul>
+<li><code>NETCONN_PRINTF_BUF</code> : the size of the buffer of <code>netconn_printf</code>. Should not be huge, because used many times to send small amounts of data.</li>
+</ul>
+</li>
+</ul>
+<h4 id="low-level-api">Low Level API</h4>
+<ul>
+<li><strong>Files</strong>: low-level-api.c low-level-api.h  </li>
+<li><strong>Description</strong>: Here functions for memory and register i\o are stored, more about them could be found <a href="low-level-api.html">here</a>.</li>
+</ul>
+<h4 id="post-methods">Post methods</h4>
+<ul>
+<li><strong>Files</strong>: post_methods.c  post_methods.h</li>
+<li><strong>Description</strong>: Here functions for processing post requests are stored. They are the principal users of the json parser.
+How the request routing works:</li>
+</ul>
+<pre><code><div class="highlight"><pre><span class="o">---</span><span class="p">[</span><span class="nx">POST</span> <span class="nx">request</span> <span class="nx">to</span> <span class="o">/</span><span class="nx">api</span><span class="o">/</span><span class="mi">2</span><span class="p">]</span><span class="o">---------------------\</span>
+                                                <span class="o">|</span>
+           <span class="o">+---------------------------+</span>        <span class="o">|</span>
+           <span class="o">|</span> <span class="nx">post</span> <span class="nx">request</span> <span class="nx">lookup</span> <span class="nx">table</span> <span class="o">|</span>        <span class="o">|</span>
+           <span class="o">|</span>                           <span class="o">|</span>        <span class="o">|</span>
+           <span class="o">|</span>     <span class="p">(</span><span class="nx">method_index</span><span class="o">:</span> <span class="mi">1</span><span class="p">)[]</span>   <span class="o">|</span>        <span class="o">|</span>
+        <span class="sr">/--|---&lt;-(method_index: 2)[]&lt;--|--------/</span>
+        <span class="o">|</span>  <span class="o">|</span>     <span class="p">(</span><span class="nx">method_index</span><span class="o">:</span> <span class="mi">3</span><span class="p">)[]</span>   <span class="o">|</span>
+        <span class="o">|</span>  <span class="o">|</span>          <span class="p">.....</span>            <span class="o">|</span>
+        <span class="o">|</span>  <span class="o">|</span>                           <span class="o">|</span> 
+        <span class="o">|</span>  <span class="o">+---------------------------+</span>
+        <span class="o">|</span>
+        <span class="nx">V</span>
+   <span class="p">[</span><span class="nx">API</span><span class="o">-&gt;</span><span class="nx">take</span><span class="p">()]</span> <span class="o">----------</span><span class="p">(</span><span class="k">if</span> <span class="nx">error</span><span class="p">)</span><span class="o">----------&gt;</span> <span class="p">[</span><span class="k">return</span> <span class="nx">error</span> <span class="nx">to</span> <span class="nx">client</span><span class="p">]</span>
+        <span class="o">|</span>                                                <span class="o">^</span> 
+        <span class="o">|</span>                                                <span class="o">|</span>
+        <span class="nx">V</span>                                                <span class="o">|</span>
+   <span class="nx">method</span><span class="p">([</span><span class="nx">request</span> <span class="nx">body</span><span class="p">])</span>                                <span class="o">|</span>
+ <span class="p">{</span> <span class="nx">send</span> <span class="nx">data</span> <span class="nx">to</span> <span class="nx">the</span> <span class="nx">user</span> <span class="p">}</span>  <span class="o">-----------------------------</span><span class="err">/</span>
+        <span class="o">|</span>
+        <span class="o">|</span>
+        <span class="o">|</span>
+        <span class="nx">V</span>
+  <span class="p">[</span><span class="nx">API</span><span class="o">-&gt;</span><span class="nx">release</span><span class="p">()]</span>
+</pre></div>
+
+</code></pre><p>A POST request is done to /api/2, the second method is looked up in the <em>request lookup table</em>. 
+Then <code>API-&gt;take()</code> it is run, then the needed <strong>method</strong> is run passing it the POST body.
+In the end <code>API-&gt;release()</code> is run. More in <code>API-&gt;release()</code> and <code>API-&gt;take()</code> could be found <a href="low-level-api.html">here</a></p>
+<h4 id="web-page">Web Page</h4>
+<ul>
+<li><strong>Files</strong>: wp.h</li>
+<li><strong>Description</strong> : This file is generated by <code>tools/f2h</code>, it contains a gzipped web page.</li>
+</ul>
+<h4 id="makefile">Makefile</h4>
+<ul>
+<li><strong>Files</strong>: makefile</li>
+<li><strong>Description</strong>:  the makefile.</li>
+<li><strong>Targets</strong> : <ul>
+<li><strong>noos</strong>: build the linux port.</li>
+<li><strong>clean</strong>: clean the project dir.</li>
+<li><strong>valgrind</strong>: run the linux port with valgrind tracker.</li>
+<li><strong>json</strong>: build the json parser testing program. </li>
+</ul>
+</li>
+</ul>
+<h4 id="debugging">Debugging</h4>
+<ul>
+<li><strong>Files</strong>: macros.h</li>
+<li><strong>Description</strong> : This header defines a few useful macros and some debugging functions. </li>
+<li><strong>Macros</strong>:<ul>
+<li><code>DEBUG</code> : if defined, then print functions actually print something, otherwise they are defied as dummies.</li>
+</ul>
+</li>
+</ul>
+<h4 id="smooth-lwip-porting">Smooth lwip porting</h4>
+<ul>
+<li><strong>Files</strong>: network-stack.h noOS.c</li>
+<li><strong>Description</strong> : depending on the configuration network-stack.h header includes or lwip headers or ported to linux
+headers.</li>
+<li><strong>Macros</strong>:<ul>
+<li><code>STRICT</code> : if this macro is defined, then the program is compiled to use strict lwip.
+Otherwise it is compiled as a port to Linux.</li>
+</ul>
+</li>
+<li><strong>pseudo-lwip/</strong>: </li>
+</ul>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">File</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">api.h</td>
+</tr>
+<tr>
+<td style="text-align:center">api_lib.c</td>
+</tr>
+<tr>
+<td style="text-align:center">netbuf.c</td>
+</tr>
+<tr>
+<td style="text-align:center">netbuf.h</td>
+</tr>
+<tr>
+<td style="text-align:center">pbuf.c</td>
+</tr>
+<tr>
+<td style="text-align:center">pbuf.h</td>
+</tr>
+</tbody>
+</table>
+</div></body></html>

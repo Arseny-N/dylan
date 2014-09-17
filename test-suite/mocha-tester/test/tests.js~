@@ -1,0 +1,75 @@
+var expect = require("chai").expect;
+
+var lines = [];
+
+describe('confing', function(){
+	it('should create a confing object ', function(){
+	
+		var Confing = require("../confing").Model;
+		var confing = new Confing({});
+		expect(confing).not.to.be.undefined;
+		
+		(function(){			
+			function random_number(min, max) {	
+				return  Math.floor(Math.random() * (max - min)) + min;
+			}
+			function random_string(len) {
+
+    				var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+				var text = "";    				
+				
+				for( var i=0; i < len; i++ )
+        				text += possible.charAt(Math.floor(Math.random() * possible.length));
+				return text;
+			}
+			
+			var len = random_number(10, 25);
+			for(var i = 0; i < len; i++) {
+				var name = random_string(random_number(10, 30));
+				var value = random_number(0, 200) %2 ? 
+						"\"" + random_string(random_number(10, 30)) + "\""  : 
+						       random_number(10, 30).toString();
+				line = {
+					name : name,
+					value : value,
+					define : "#define " + name + "  "  + value
+				};
+				lines.push(line);
+			}			
+		})();
+
+		describe('hdr-parse', function(){	
+			it('should parse a C header lines', function(){			
+				for(var index in lines) {
+					var line = lines[index];
+					var res = confing.hdr_parse_line(line.define);
+					
+					expect(res).to.exist;
+					expect(res.name).to.equal(line.name);
+					expect(res.value).to.equal(line.value);
+				}	
+			})
+			it('should parse a C headers ', function(){			
+				var header = lines.reduce(function(o1, o2){
+					return o1 + "\n" + o2;
+				}, "");
+				var res = confing.hdr_parse_string(header);
+				
+				for(var index in res) {
+					var r = res[index];
+					
+					expect(r).to.exist;
+					expect(r.name).to.exist;
+					expect(r.value).to.exist;
+					
+					var line = lines.filter(function(e){
+						return e.name == res.name;
+					})
+					expect(line).to.have.length(1);
+					expect(res.name).to.equal(line.name);
+					expect(res.value).to.equal(line.value);
+				}	
+			})
+		});	
+	})
+})

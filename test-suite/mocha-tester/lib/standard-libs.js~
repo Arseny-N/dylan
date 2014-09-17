@@ -1,0 +1,154 @@
+var server_api = require("server_api");
+
+;(function(app){
+	app.libs = {}
+	app.libs.gen_logger = function(fname){
+		return {
+			error : function(msg) {
+				if(typeof msg != 'string')
+					msg = msg.toSource ? msg.toSource() : msg.toString();
+				app.logs.raw.add(new app.LoggerEntry({ emitter: "script", context : fname,body : msg, prio : "danger"}));
+			},
+			info : function(msg) {
+				if(typeof msg != 'string')
+					msg = msg.toSource ? msg.toSource() : msg.toString();
+			
+				app.logs.raw.add(new app.LoggerEntry({ emitter: "script", context : fname,body : msg, prio : "info"}));
+			},
+			warn : function(msg) {
+				if(typeof msg != 'string')
+					msg = msg.toSource ? msg.toSource() : msg.toString();
+				app.logs.raw.add(new app.LoggerEntry({ emitter: "script", context : fname,body : msg, prio : "warning"}));
+			},
+			o2s : function(o, opts) {
+				return app.utils.object2string(o, opts);
+			}
+		}
+	}
+	app.libs.gen_docs = function(docs) {
+		return {
+			list : function() {
+				return docs.map(function(doc){return doc.get("name")});
+			},	
+			get_data  : function(name) {						
+				var r = docs.where({name : name})[0];			
+				return r ? r.get("data") : r;
+			},
+			set_data  : function(name, data) {						
+				var r = docs.where({name : name})[0];			
+				return r ? r.set("data", data) : r;
+			}		
+		
+		}
+	}
+
+
+	app.libs.api = {
+		reg : {},
+		mem : {}
+	};
+	app.libs.__gen_cb = function(ok, fn) {
+		fn = fn || function(){};
+		if(ok) {
+			return function(resp) {
+				app.utils.currrentOp("");				
+				fn(undefined, resp.res)
+			}		
+		} else {
+			return function(res) {
+				app.utils.currrentOp("");		
+				fn(this);
+			}
+		}
+	};
+	app.libs.api.mem.write = function(address, data, fn) {
+		var req = [ address, data ];
+		
+		if(typeof address != 'number' ) 
+			throw TypeError("`address' and `count' should be a number");		
+		if(data.__proto__ != Array.prototype ) 
+			throw TypeError("`data' should be an array of numbers");		
+		for(var i=0; i< data.length; ++i)
+			if(typeof data[i] != 'number')
+				throw TypeError("`data' should be an array of numbers");
+	
+
+		app.utils.currrentOp("mem.write");
+		var jqXHR = app.api.mem_write({req : req}, app.libs.__gen_cb(1, fn)).error(app.libs.__gen_cb(0, fn));
+		return JSON.parse(jqXHR.responseText).result;
+	}	
+
+	app.libs.api.mem.read = function(address, count, fn) {
+		var req = [ address, count ];
+	
+		if(typeof address != 'number' || typeof count != 'number') 
+			throw TypeError("`address' and `count' should be a number");
+		app.utils.currrentOp("mem.read");
+		var jqXHR = app.api.mem_read({req : req}, app.libs.__gen_cb(1, fn)).error(app.libs.__gen_cb(0, fn));
+		return JSON.parse(jqXHR.responseText).result;
+	}
+
+	app.libs.api.reg.read = function(reg, fn) {		
+		var req = [ reg	];
+
+		if(typeof reg != 'number' ) 
+			throw TypeError("`reg' should be a number");
+		app.utils.currrentOp("reg.read");
+		var jqXHR = app.api.reg_read({req : req}, app.libs.__gen_cb(1, fn)).error(app.libs.__gen_cb(0, fn));
+		console.log("--------------------");
+		console.dir(jqXHR.responseText);
+		return JSON.parse(jqXHR.responseText).result;
+	}
+
+	app.libs.api.reg.write = function(reg, data, fn) {			
+		var req = [ reg, data ];
+	
+		if(typeof reg != 'number' ||  typeof data != 'number') 
+			throw TypeError("`data' and `reg' should be a number");
+	
+	
+		app.utils.currrentOp("reg.write");
+		
+		var jqXHR = app.api.reg_write({req : req}, app.libs.__gen_cb(1, fn)).fail(app.libs.__gen_cb(0, fn));
+		return JSON.parse(jqXHR.responseText).result;
+	}	
+
+
+
+
+	app.libs.console_api = { r : {}, m : {}};
+	app.libs.console_api.m.w = function(addr, data) { 
+		return app.libs.api.mem.write(addr, data, function(err,res){		
+			app.log({ emitter: "console", 
+				  context : "console",
+				  prio : "info", 
+				  body : app.utils.object2string({err:err, res : res}) });
+		});
+		
+	}
+	app.libs.console_api.m.r = function(addr, data) { 
+		return app.libs.api.mem.read(addr, data, function(err,res){		
+			app.log({ emitter: "console", 
+				  context : "console",
+				  prio : "info", 
+				  body : app.utils.object2string({err:err, res : res})});	
+		}); 
+	}
+
+	app.libs.console_api.r.r = function(addr) { 
+		return app.libs.api.reg.read(addr, function(err, res){		
+			app.log({ emitter: "console",
+				  context : "console",
+				  prio : "info", 
+				  body : app.utils.object2string({err:err, res : res}) });		
+		}); 
+	}
+	app.libs.console_api.r.w = function(addr, data) { 
+		return app.libs.api.reg.write(addr, data, function(err,res){		
+			app.log({ emitter: "console",
+				  context : "console",
+				  prio : "info", 
+				  body : app.utils.object2string({err:err, res : res}) });		
+		}); 
+	}
+})(app);

@@ -1,0 +1,64 @@
+<html><head><meta charset="UTF-8"><link type="text/css" rel="stylesheet" href="style.css"></head><body><div class="container"><p><a href="index.html"><strong>&lt; Back</strong></a></p>
+<h1 id="console-api">Console API</h1>
+<h2 id="built-in-functions">Built-in functions</h2>
+<h3 id="memory-i-o">Memory i/o</h3>
+<p>The <code>m.&lt;func&gt;</code> set of functions allows you to interact with the memory of the microprocessor.</p>
+<h4 id="-m-r-address-"><code>m.r(address)</code></h4>
+<ul>
+<li><strong>Description</strong>: Reads a memory location.</li>
+<li><strong>Arguments</strong>:    <ul>
+<li><code>address</code>  [<em>Number</em>]  - a memory address from where data should be read.</li>
+</ul>
+</li>
+<li><strong>Return Value</strong>  [<em>Array</em>]   - the function returns the result of the memory read to the given location. </li>
+</ul>
+<h4 id="-m-w-address-data-"><code>m.w(address, data)</code></h4>
+<ul>
+<li><strong>Description</strong>: Writes a memory location.</li>
+<li><strong>Arguments</strong>:<ul>
+<li><code>address</code>  [<em>Number</em>]  - a memory address where data should be written.</li>
+<li><code>data</code>     [<em>Array</em>]     - data which should be written to the <em>address</em>.</li>
+</ul>
+</li>
+<li><strong>Return Value</strong> [<em>String</em>]   - the function returns the result of the memory read to the given location.               </li>
+<li><strong>Notes</strong> : A successful write returns a <em>&quot;success&quot;</em> string.</li>
+</ul>
+<hr>
+<h3 id="register-i-o">Register i/o</h3>
+<p>The <code>r.&lt;func&gt;</code> set of functions allows you to interact with the registers of the microprocessor.</p>
+<h4 id="-r-r-register-"><code>r.r(register)</code></h4>
+<ul>
+<li><strong>Description</strong>: Reads a register.</li>
+<li><strong>Arguments</strong>:<ul>
+<li><code>register</code> [<em>Untyped</em>] - a register from where data should be read.</li>
+</ul>
+</li>
+<li><strong>Return Value</strong> [<em>Number</em>]  - the function returns the result of the register read. </li>
+</ul>
+<h4 id="-r-w-register-data-"><code>r.w(register, data)</code></h4>
+<ul>
+<li><strong>Description</strong>: Writes a register.</li>
+<li><strong>Arguments</strong>:<ul>
+<li><code>register</code> [<em>Untyped</em>]  - a register where data should be written.</li>
+<li><code>data</code>       [<em>Number</em>]     - data which should be written to the <em>register</em>.</li>
+</ul>
+</li>
+<li><strong>Return Value</strong> [<em>String</em>]   - the function returns the result of the register read.</li>
+<li><strong>Notes</strong> : A successful write returns a <em>&quot;success&quot;</em> string.</li>
+</ul>
+<hr>
+<h4 id="-require-library-"><code>require(library)</code></h4>
+<ul>
+<li><strong>Description</strong> : See <a href="editor-api.html#require-library-">editor-api</a>.</li>
+</ul>
+<h4 id="-error-message-"><code>error(message)</code></h4>
+<h4 id="-info-message-"><code>info(message)</code></h4>
+<h4 id="-warn-message-"><code>warn(message)</code></h4>
+<ul>
+<li><strong>Description</strong> : See <a href="editor-api.html#logger">logger</a>.</li>
+<li><strong>Notes</strong>      : These functions are ruffly equal to <code>info = require(&#39;logger&#39;).info</code>, and so on.</li>
+</ul>
+<h2 id="helper-libraries">Helper libraries</h2>
+<p>All Libraries available to the editor scripts are also available to the console.
+See <a href="editor-api.html">editor-api</a>.</p>
+</div></body></html>

@@ -1,0 +1,31 @@
+<div  class="btn-group btn-group-justified" id="editor-toolbar">
+	<div class="btn-group">
+		<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+			{{- icon("file") }} File <span class="caret"></span>
+   		</button>   				
+    		<ul class="dropdown-menu" role="menu">
+    		
+			<li class="dropdown-header">Open file </li>
+			<li><a id="add-disk-script">Script</a></li>
+			<li><a id="add-disk-text">Text</a></li>
+			<li class="divider"></li>
+			
+			<li class="dropdown-header">Create file</li>
+			<li><a id="add-doc-empty">Script</a></li>
+			<li><a id="add-text-doc-empty">Text</a></li>
+			<li class="divider"></li>
+			
+			<li><a id="download"> {{- icon("floppy-save")}} Download </a> </li>
+			<li><a id="save">{{- icon("floppy-save")}} Save locally </a> </li>
+			<li><a id="copy-to-clbd">{{- icon("share") }} To clipboard</a> </li>
+
+			<li class="divider"></li>
+			<li><a id="close-doc">{{- icon("ban-circle") }} Close</a>   </li>
+			<li><a id="rename-doc">{{- icon("ban-circle") }} Rename</a>  </li>
+		</ul>
+	</div>
+											
+  	<a class="btn btn-default" id="run-doc">
+  		{{- icon("run") }}Run
+	</a>
+</div>

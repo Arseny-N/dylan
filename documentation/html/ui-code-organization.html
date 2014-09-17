@@ -1,0 +1,176 @@
+<html><head><meta charset="UTF-8"><link type="text/css" rel="stylesheet" href="style.css"></head><body><div class="container"><p><a href="index.html"><strong>&lt; Back</strong></a></p>
+<h1 id="web-ui-code-organization-and-build-system">Web Ui code organization and build system</h1>
+<p>The User interface could be divided into two parts - the web page and the build system.
+The task of the build system is to assemble a web page from the sources making it as small as possible.
+First we describe the packages used by the web page, then the packages used by the build system and 
+the actions witch it performs while assembling the web page. In the end we are going to take a 
+look at the code organization.</p>
+<h2 id="the-web-page">The web page</h2>
+<h4 id="javascript-libraries-used-by-the-web-page">Javascript libraries used by the web page</h4>
+<ul>
+<li><a href="http://jquery.com">jQuery</a>     - moderately light helper for manipulation of DOM elements.</li>
+<li><a href="http://getbootstrap.com">Bootstrap</a> - front end framework, utilized for nice and clear styles.</li>
+<li><a href="http://backbone.org">Backbone.js</a>    - MVC like system for javascript, used to implement complex
+dynamic elements.<ul>
+<li><a href="">Backbone.localstorage</a>     - HTML5 local storage facility ported to backbone.</li>
+</ul>
+</li>
+<li><a href="http://underscore.org">Underscore.js</a> - sole dependency of backbone.js, provides extended features for 
+default javascript Objects. </li>
+<li><a href="http://codemirror.net">Codemirror</a>  - text editor, the most light for now and most full and flexible option.</li>
+<li><a href="http://mousetrap.org">Mousetrap</a>    - the lightest javascript library used for keyboard shortcuts.</li>
+<li><a href="">saveFile</a>            - HTML5 file manipulations</li>
+</ul>
+<h2 id="build-system">Build System</h2>
+<h3 id="how-it-works">How it works</h3>
+<p>The build system heavily uses <a href="nodejs.org">Node.js</a>, Node.js ports javascript on the server side
+making it quite flexible language that could be used as a language for system programming.</p>
+<p>The main task of the build system is to minimize and concatenate files located in the 
+<strong>source</strong> sub directory moving them int the <strong>build</strong> directory.</p>
+<p>The resulting file is <strong>index.min.html</strong>, it is then transformed to a C header by <code>tools/f2h</code>, 
+or actually by <code>cd tools; make header [-B]</code>.The following section describes how the build 
+system minimizes and combines various files located under the <strong>source</strong> directory.</p>
+<h3 id="package-it-uses">Package it uses</h3>
+<ul>
+<li><a href="">Gulp</a> - streaming build system, in other words a kind of <strong>make</strong> for the web.<ul>
+<li>gulp-* - gulp wrappers for other node packages or just small gulp dependencies.</li>
+</ul>
+</li>
+<li><a href="">ejs</a> - javascript templater used to create an index.html form the templates located at <em>templates/</em></li>
+<li><a href="">uglifyjs</a> - javascript minifier.</li>
+<li><a href="">htmlmin</a> - html minimizer.</li>
+<li><a href="">minifycss</a> - css minifier.</li>
+</ul>
+<h2 id="building">Building</h2>
+<p>Gulp works in the following way - it reads the <code>gulpfile.js</code> located in the current directory 
+and executes it. The user can choose what to run by specifying some command line arguments, 
+such command line arguments are called <em>targets</em>. If <strong>gulp</strong> is run with no arguments then 
+the default target is executed. The following targets are avaible.</p>
+<ul>
+<li><strong>scripts</strong> - minifies all javascripts moving them to <em>/javascripts/minified</em>, then concatenates and 
+minifies them again dumping the result to <em>build/scripts.min.js</em></li>
+<li><strong>styles</strong> - minifies all styles moving them to <em>/stylesheets/minified</em>, then concatenates and 
+minifies them again dumping the result to <em>build/styles.min.js</em></li>
+<li><strong>html.dev</strong> - builds an index.html file located at <em>source/</em>. Useful while developing - 
+all scripts and styles are included via <code>&lt;script&gt;</code> and <code>&lt;link&gt;</code> tags, making debugging easier.
+The tags point to full (not minified) javascripts, leading to a smoother debugging experience.</li>
+<li><strong>html.build</strong> - builds a index.min.html located at <em>build/</em> , all styles and scripts are embedded
+so the web page could be served with one big HTTP GET request.</li>
+<li><strong>documentation.html</strong> - build the documentation from markdown to html.</li>
+</ul>
+<h2 id="code-organization">Code organization</h2>
+<h4 id="backbone-intro">Backbone intro</h4>
+<p>Backbone.js ports some object orientation to the javascript world, the directory and code organization
+are not highly tied to the abstraction provided by Backbone but some understanding is still
+required.</p>
+<p>Backbone is an <em>MVC</em> framework made to allow easy development of complex solutions. 
+It uses the following terminology:</p>
+<ul>
+<li><strong>Model</strong> - an object that is designed to keep data - models implement validation and many
+quite useful functions.</li>
+<li><strong>Collection</strong> - an array of models. For instance data of an article would be kept in an model
+but all the articles would be kept in a collection.</li>
+<li><strong>View</strong> - an object that handles rendering of a model or collection associated to it.</li>
+</ul>
+<p>So the MVC in the Backbone case stand for <strong>M</strong>odel <strong>V</strong>iew <strong>C</strong>ollection, usually the C is 
+for Controller - the glue that tides the data (Models) and it&#39;s representation(View) together.</p>
+<p>Also Backbone adds <strong>Events</strong> to the world of javascript. Everything could be an event emitter,
+and everybody could receive it. Event provide an alternative to callbacks and direct function
+calls. When a model is added to a collection an event is spawned when a model is removed an event is also spawned etc.</p>
+<h4 id="how-everything-works">How everything works</h4>
+<p>Our web application keeps a model for every opened document, all of them are kept in the <code>app.docs</code>
+collection. The data is not kept directly in the model but in an object prided by codemirror.
+All the code related to the &quot;documents&quot; is located in <em>documents.js</em> file. Data kept in <code>app.Document</code>
+models is rendered with codemirror views (<code>app.ScriptEditor</code>). </p>
+<p>The code (data) kept in documents is interpreted with the <code>app.interpreter</code>, it <code>eval()</code>s code
+supplied to it, an adds the <code>require()</code> functions and <code>exports</code> object. Also the <code>app.interpreter</code>
+is used by  the console to process it inputs. Code related to <code>app.interpreter</code> is located
+in <em>interpreter.js</em>. The interpreter does not use any of the functionality provided by Backbone.</p>
+<p>The output of the interpreter is dumped to the log subsystem, each log message is kept in
+a separate model and all models are kept in the <code>app.logs.raw</code> collection. The filtering is 
+possible due to the existence of <code>app.logs.filtered</code> collection where the messages are put
+only after filtering them. If no filtering is imposed then <code>app.logs.filtered</code> is equal to 
+<code>app.logs.raw</code>.</p>
+<h2 id="directory-organization">Directory organization</h2>
+<h4 id="source-">source/</h4>
+<table>
+<thead>
+<tr>
+<th>Directory</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>fonts/</td>
+<td>Here bootstrap icons are kept, not actually used.</td>
+</tr>
+<tr>
+<td>javascripts/</td>
+<td>Here <em>javascript</em> files are kept.</td>
+</tr>
+<tr>
+<td>stylesheets/</td>
+<td>Here <em>css</em> files are kept.</td>
+</tr>
+<tr>
+<td>templates/</td>
+<td>Here templates files are kept for building <strong>index.html</strong></td>
+</tr>
+<tr>
+<td>index.html</td>
+<td>Actually index.html</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Directory</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>api.js</td>
+<td>Warpers for AJAX calls</td>
+</tr>
+<tr>
+<td>app.js</td>
+<td>Main file, keeps text-editor views and the &quot;main&quot; view</td>
+</tr>
+<tr>
+<td>console.js</td>
+<td>Console related code</td>
+</tr>
+<tr>
+<td>documents.js</td>
+<td>Document related code</td>
+</tr>
+<tr>
+<td>full/</td>
+<td>Full (not minimized) javascripts, kept for debugging</td>
+</tr>
+<tr>
+<td>interpreter.js</td>
+<td>interpreter related code</td>
+</tr>
+<tr>
+<td>logs.js</td>
+<td>Logging related code</td>
+</tr>
+<tr>
+<td>minified/</td>
+<td>Monified versions of the code</td>
+</tr>
+<tr>
+<td>standard-libs.js</td>
+<td>Default librarises accesible at run time byu the user edited scripts</td>
+</tr>
+<tr>
+<td>utils.js</td>
+<td>Utilites</td>
+</tr>
+</tbody>
+</table>
+</div></body></html>

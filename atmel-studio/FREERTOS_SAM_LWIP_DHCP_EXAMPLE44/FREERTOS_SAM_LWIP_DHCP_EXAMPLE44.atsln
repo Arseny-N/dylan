@@ -1,0 +1,20 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Atmel Studio Solution File, Format Version 11.00
+Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "FREERTOS_SAM_LWIP_DHCP_EXAMPLE44", "FREERTOS_SAM_LWIP_DHCP_EXAMPLE44\FREERTOS_SAM_LWIP_DHCP_EXAMPLE44.cproj", "{AB84546F-07DB-43E8-A784-E61630698C06}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|ARM = Debug|ARM
+		Release|ARM = Release|ARM
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{AB84546F-07DB-43E8-A784-E61630698C06}.Debug|ARM.ActiveCfg = Debug|ARM
+		{AB84546F-07DB-43E8-A784-E61630698C06}.Debug|ARM.Build.0 = Debug|ARM
+		{AB84546F-07DB-43E8-A784-E61630698C06}.Release|ARM.ActiveCfg = Release|ARM
+		{AB84546F-07DB-43E8-A784-E61630698C06}.Release|ARM.Build.0 = Release|ARM
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

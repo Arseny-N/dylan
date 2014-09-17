@@ -1,0 +1,5 @@
+<html><head><link type="text/css" rel="stylesheet" href="style.css"></head><body><div class="container"><h1 id="console-api">Console API</h1>
+<h4 id="require">require</h4>
+<p>|----|
+|Description | See <a href="editor-api.html#require">editor-api</a>.</p>
+</div></body></html>

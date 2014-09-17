@@ -1,0 +1,107 @@
+<head>
+    	<title>{{= title }}</title>
+	<meta charset="utf-8">
+
+	<script  type="text/javascript">var app = app || {};</script>	    	
+	
+	<!-- <script>document.write('<script src="http://' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1"></' + 'script>')</script> -->
+	
+	
+	{{ if(config.styles === "minified" ) { }}
+	
+		<link rel="stylesheet" href="stylesheets/minified/bootstrap.min.css" />
+		<link rel="stylesheet" href="stylesheets/minified/bootstrap-darkly.min.css" />
+	
+
+		<link href="stylesheets/minified/codemirror.min.css" rel="stylesheet" type="text/css" />
+    		<link href="stylesheets/minified/codemirror-theme.min.css" rel="stylesheet" type="text/css" />
+    		<link rel="stylesheet" href="stylesheets/minified/style.min.css" />    		
+	{{ } else if(config.styles === "raw") { }} 	
+	
+		<link rel="stylesheet" href="stylesheets/bootstrap.css" />
+		<link rel="stylesheet" href="stylesheets/bootstrap-darkly.css" />
+	
+		<link href="stylesheets/codemirror.css" rel="stylesheet" type="text/css" />
+    		<link href="stylesheets/codemirror-theme.css" rel="stylesheet" type="text/css" />
+
+    		<link href="stylesheets/codemirror4-theme.css" rel="stylesheet" type="text/css" />
+    		
+    		<link rel="stylesheet" href="stylesheets/style.css" />    		
+	   	
+	{{ } else if(config.styles === "production") { }}    		
+		<link rel="stylesheet" href="styles.min.css" />
+	{{ } else if(config.styles === "production_embed") { }}    		   			
+		<style>{{- data.styles }}</style>
+	{{ } }}
+
+
+	{{ if(config.scripts.minified) { }}
+	    	<script type="text/javascript" src="javascripts/minified/jquery.min.js"></script>
+	    	<script type="text/javascript" src="javascripts/minified/underscore.min.js"></script>
+		<script type="text/javascript" src="javascripts/minified/backbone.min.js"></script>
+		<script type="text/javascript" src="javascripts/minified/backbone.localstorage.min.js"></script>
+	
+	    	<script type="text/javascript" src="javascripts/minified/FileSaver.min.js"> </script>    	    	
+	 	<script type="text/javascript" src="javascripts/minified/mousetrap.min.js"></script>
+		<script type="text/javascript" src="javascripts/minified/codemirror.min.js"></script>
+		<script type="text/javascript" src="javascripts/minified/codemirror-mode.min.js"></script>
+		<script type="text/javascript" src="javascripts/minified/bootstrap.min.js" > </script>
+				
+	    	<script type="text/javascript" src="javascripts/minified/api.min.js"></script>
+	    	<script type="text/javascript" src="javascripts/minified/standard-libs.min.js"></script>
+	 	<script type="text/javascript" src="javascripts/minified/utils.min.js"> </script>	
+	    		
+		<script type="text/javascript" src="javascripts/minified/documents.min.js"></script>
+		<script type="text/javascript" src="javascripts/minified/console.min.js"></script>
+		<script type="text/javascript" src="javascripts/minified/logs.min.js"></script>
+		<script type="text/javascript" src="javascripts/minified/interpreter.min.js"></script>
+	
+	
+	    	<script type="text/javascript" src="javascripts/minified/app.min.js"></script>
+	    	
+ 	{{ } else if(config.scripts === "raw") { }}
+ 	
+ 		<script type="text/javascript" src="javascripts/full/jquery.js"></script>
+	    	<script type="text/javascript" src="javascripts/full/underscore.js"></script>
+		<script type="text/javascript" src="javascripts/full/backbone.js"></script>
+		<script type="text/javascript" src="javascripts/full/backbone.localstorage.js"></script>
+	
+	    	<script type="text/javascript" src="javascripts/full/FileSaver.js"> </script>    	    	
+	 	<script type="text/javascript" src="javascripts/full/mousetrap.js"></script>
+		<script type="text/javascript" src="javascripts/full/codemirror.js"></script>
+		<script type="text/javascript" src="javascripts/full/codemirror-mode.js"></script>
+		<script type="text/javascript" src="javascripts/full/bootstrap.js" > </script>
+ 	
+ 	 	
+ 
+ 	   	<script type="text/javascript" src="javascripts/api.js"></script>
+ 	   	<script type="text/javascript" src="javascripts/standard-libs.js"></script>
+		<script type="text/javascript" src="javascripts/utils.js"></script>	
+		<script type="text/javascript" src="javascripts/documents.js"></script>
+		<script type="text/javascript" src="javascripts/console.js"></script>
+		<script type="text/javascript" src="javascripts/logs.js"></script>
+		<script type="text/javascript" src="javascripts/interpreter.js"></script>
+	
+	
+ 	   	<script type="text/javascript" src="javascripts/app.js"></script>
+	{{ } else if(config.scripts === "production") { }}    		   	
+		<script type="text/javascript" src="scripts.min.js"></script>
+	{{ } else if(config.scripts === "production_embed") { }}    		   	
+		<script type="text/javascript" >{{- data.scripts }}</script>
+    	{{ } }}	
+
+	
+	
+	<!--
+		<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootswatch/3.2.0/darkly/bootstrap.min.css" />
+		<script src="https://raw.github.com/eligrey/Blob.js/master/Blob.min.js"> </script>
+    		<script src="https://raw.github.com/eligrey/canvas-toBlob.js/master/canvas-toBlob.js"> </script> 
+    	-->
+    	
+	<script  type="text/javascript">
+		$(function () {
+			app.main = new app.AppView({});
+		}); 
+	</script>
+</head>
+

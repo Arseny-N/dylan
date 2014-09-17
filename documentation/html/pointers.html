@@ -1,0 +1,19 @@
+<html><head><meta charset="UTF-8"><link type="text/css" rel="stylesheet" href="style.css"></head><body><div class="container"><p><a href="index.html"><strong>&lt; Back</strong></a></p>
+<h1 id="pointers">Pointers</h1>
+<p>This document gather usefull inforamtion about javascript and some fo its dark parts.</p>
+<h3 id="csv-to-array">CSV to array</h3>
+<pre><code class="lang-javascript"><div class="highlight"><pre><span class="nx">csv</span> <span class="o">=</span> <span class="s2">&quot;1,2,3,4,5,65,7&quot;</span><span class="p">;</span>
+<span class="nx">arr</span> <span class="o">=</span> <span class="nx">csv</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">);</span>
+
+<span class="nx">arr</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="mi">55</span><span class="p">;</span>
+<span class="nx">cvs</span> <span class="o">=</span> <span class="nx">arr</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">);</span>
+</pre></div>
+
+</code></pre>
+<h3 id="exitting-with-an-error-message">Exitting with an error message</h3>
+<pre><code class="lang-javascript"><div class="highlight"><pre><span class="k">if</span><span class="p">(</span><span class="nx">error</span><span class="p">)</span>
+    <span class="k">throw</span><span class="p">(</span><span class="s2">&quot;Error, error != 0&quot;</span><span class="p">);</span>
+</pre></div>
+
+</code></pre>
+</div></body></html>

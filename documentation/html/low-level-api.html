@@ -1,0 +1,149 @@
+<html><head><meta charset="UTF-8"><link type="text/css" rel="stylesheet" href="style.css"></head><body><div class="container"><p><a href="index.html"><strong>&lt; Back</strong></a></p>
+<h1 id="low-level-api">Low level API</h1>
+<p>This document describes how to to port the server to a specific board.</p>
+<h3 id="api-types-defines">API Types &amp; Defines</h3>
+<h4 id="base_t">base_t</h4>
+<p>All data is stored in <code>base_t</code> type.</p>
+<h4 id="max_str_base_t">MAX_STR_BASE_T</h4>
+<p>This define is equal to the maximum length of the string representation of a <code>base_t</code>.</p>
+<h4 id="addr_t">addr_t</h4>
+<p>All data is addressed through the <code>addr_t</code> type.</p>
+<h4 id="max_str_addr_t">MAX_STR_ADDR_T</h4>
+<p>This define is equal to the maximum length of the string representation of a <code>addr_t</code>.</p>
+<h4 id="max_mem_buf_len">MAX_MEM_BUF_LEN</h4>
+<p>This define is equal to the count of the buffers with witch the data will be transmitted 
+via the mem functions. In other words every mem_read\write call will read\write <code>MAX_MEM_BUF_LEN</code>
+<code>base_t</code> units or less.</p>
+<h3 id="api-functions">API Functions</h3>
+<p>A specific port should define a <code>lowlevel_api</code> structure, assigning it&#39;s 
+fileds appropriate functions. </p>
+<pre><code class="lang-C"><div class="highlight"><pre><span class="nx">typedef</span> <span class="k">void</span> <span class="p">(</span><span class="o">*</span><span class="nx">write_register_t</span><span class="p">)</span>  <span class="p">(</span><span class="nx">address_t</span> <span class="nx">addr</span><span class="p">,</span> <span class="nx">base_t</span> <span class="nx">value</span><span class="p">);</span>
+<span class="nx">typedef</span> <span class="k">void</span> <span class="p">(</span><span class="o">*</span><span class="nx">read_register_t</span><span class="p">)</span>   <span class="p">(</span><span class="nx">address_t</span> <span class="nx">addr</span><span class="p">,</span>  <span class="nx">base_t</span> <span class="o">*</span><span class="nx">value</span><span class="p">);</span>
+
+
+<span class="nx">typedef</span> <span class="k">void</span> <span class="p">(</span><span class="o">*</span><span class="nx">write_memory_t</span><span class="p">)</span>  <span class="p">(</span><span class="nx">address_t</span> <span class="nx">addr</span><span class="p">,</span> <span class="nx">base_t</span> <span class="o">*</span><span class="nx">value</span><span class="p">,</span>  <span class="nx">size_t</span> <span class="nx">len</span><span class="p">);</span>
+<span class="nx">typedef</span> <span class="k">void</span> <span class="p">(</span><span class="o">*</span><span class="nx">read_memory_t</span><span class="p">)</span>   <span class="p">(</span><span class="nx">address_t</span> <span class="nx">addr</span><span class="p">,</span> <span class="nx">base_t</span> <span class="o">*</span><span class="nx">value</span><span class="p">,</span>  <span class="nx">size_t</span> <span class="nx">len</span><span class="p">);</span>
+
+<span class="nx">typedef</span> <span class="kr">int</span>  <span class="p">(</span><span class="o">*</span><span class="nx">take_func_t</span><span class="p">)</span>   <span class="p">(</span><span class="k">void</span><span class="p">);</span>
+<span class="nx">typedef</span> <span class="k">void</span> <span class="p">(</span><span class="o">*</span><span class="nx">release_func_t</span><span class="p">)</span>   <span class="p">(</span><span class="k">void</span><span class="p">);</span>
+<span class="nx">typedef</span> <span class="kr">int</span>  <span class="p">(</span><span class="o">*</span><span class="nx">open_func_t</span><span class="p">)</span>   <span class="p">(</span><span class="k">void</span><span class="p">);</span>
+<span class="nx">typedef</span> <span class="k">void</span>  <span class="p">(</span><span class="o">*</span><span class="nx">close_func_t</span><span class="p">)</span>   <span class="p">(</span><span class="k">void</span><span class="p">);</span>
+
+<span class="nx">struct</span> <span class="nx">lowlevel_api</span> <span class="p">{</span>
+
+    <span class="nx">take_func_t</span>    <span class="nx">take</span><span class="p">;</span> 
+    <span class="nx">release_func_t</span> <span class="nx">release</span><span class="p">;</span> 
+
+    <span class="nx">write_register_t</span> <span class="nx">reg_write</span><span class="p">;</span>
+    <span class="nx">read_register_t</span>  <span class="nx">reg_read</span><span class="p">;</span>
+
+    <span class="nx">write_memory_t</span> <span class="nx">mem_write</span><span class="p">;</span>
+    <span class="nx">read_memory_t</span>  <span class="nx">mem_read</span><span class="p">;</span>
+
+    <span class="nx">ssize_t</span> <span class="p">(</span><span class="o">*</span><span class="nx">base_to_string</span><span class="p">)(</span><span class="nx">base_t</span> <span class="nx">num</span><span class="p">,</span> <span class="kr">char</span> <span class="nx">string</span><span class="p">[</span><span class="nx">MAX_STR_BASE_T</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]);</span>
+    <span class="kr">int</span>     <span class="p">(</span><span class="o">*</span><span class="nx">string_to_base</span><span class="p">)(</span><span class="kr">char</span> <span class="nx">string</span><span class="p">[</span><span class="nx">MAX_STR_BASE_T</span> <span class="o">+</span> <span class="mi">1</span><span class="p">],</span> <span class="nx">base_t</span> <span class="o">*</span><span class="nx">num</span><span class="p">);</span>
+
+    <span class="kr">int</span> <span class="p">(</span><span class="o">*</span><span class="nx">string_to_addr</span><span class="p">)(</span><span class="kr">char</span> <span class="nx">saddr</span><span class="p">[</span><span class="nx">MAX_STR_ADDR_T</span> <span class="o">+</span> <span class="mi">1</span><span class="p">],</span> <span class="nx">address_t</span> <span class="o">*</span><span class="nx">addr</span><span class="p">);</span>
+
+
+    <span class="kr">char</span> <span class="o">*</span><span class="nx">name</span><span class="p">;</span>    
+<span class="p">};</span>
+</pre></div>
+
+</code></pre>
+<h3 id="data-i-o">Data i/o</h3>
+<h4 id="lowlevel_api-reg_write">lowlevel_api::reg_write</h4>
+<ul>
+<li><strong>Type</strong> : <code>void (*write_register_t)  (address_t addr, base_t value);</code></li>
+<li><strong>Description</strong>: when called this function should write to a register located at <strong>addr</strong> 
+the data specified in <strong>value</strong>.</li>
+</ul>
+<h4 id="lowlevel_api-reg_read">lowlevel_api::reg_read</h4>
+<ul>
+<li><strong>Type</strong> : <code>void (*read_register_t)   (address_t addr,  base_t *value);</code></li>
+<li><strong>Description</strong>: when called this function should read the register located at <strong>addr</strong>, 
+the result should be returned in <strong>value</strong>.</li>
+</ul>
+<h4 id="lowlevel_api-mem_write">lowlevel_api::mem_write</h4>
+<ul>
+<li><strong>Type</strong> : <code>void (*write_memory_t)  (address_t addr, base_t *value,  size_t len);</code></li>
+<li><strong>Description</strong>: when called this function should write to a memory location that starts at <strong>addr</strong> 
+the data specified in <strong>value</strong>, which size is <strong>len</strong>.</li>
+</ul>
+<h4 id="lowlevel_api-mem_read">lowlevel_api::mem_read</h4>
+<ul>
+<li><strong>Type</strong> : <code>void (*read_memory_t)  (address_t addr, base_t *value,  size_t len);</code></li>
+<li><strong>Description</strong>: when called this function should read the memory location that starts at <strong>addr</strong> 
+the data should be stored in <strong>value</strong>, the amount of data to be read is passed through <strong>len</strong>.</li>
+</ul>
+<h3 id="type-conversion">Type conversion</h3>
+<p>The server already have some default functions to convert strings to numbers and etc, but 
+in case of an unusual type the following functions could be also specified.</p>
+<h4 id="lowlevel_api-base_to_string">lowlevel_api::base_to_string</h4>
+<ul>
+<li><strong>Type</strong> :<code>ssize_t (*base_to_string)(base_t num, char string[MAX_STR_BASE_T + 1])</code></li>
+<li><strong>Description</strong>: this function translates a <code>base_t</code> type to a string, 
+the resulting string length is returned. Upon error a -1 return value is expected.</li>
+</ul>
+<h4 id="lowlevel_api-string_to_base">lowlevel_api::string_to_base</h4>
+<ul>
+<li><strong>Type</strong> :<code>int (*string_to_base)(char string[MAX_STR_BASE_T + 1], base_t *num)</code></li>
+<li><strong>Description</strong>: this function translates a string type to a <code>base_t</code>. 
+Upon error a -1 return value is expected, upon successful execution a return value of 0 is expected.</li>
+</ul>
+<h4 id="lowlevel_api-string_to_addr">lowlevel_api::string_to_addr</h4>
+<ul>
+<li><strong>Type</strong> :<code>int (*string_to_addr)(char saddr[MAX_STR_ADDR_T + 1], address_t *addr)</code></li>
+<li><strong>Description</strong>: this function translates a string type to a <code>addr_t</code>. 
+Upon error a -1 return value is expected, upon successful execution a return value of 0 is expected.</li>
+</ul>
+<h3 id="init-finit">Init &amp; Finit</h3>
+<h4 id="lowlevel_api-open">lowlevel_api::open</h4>
+<ul>
+<li><strong>Type</strong> :<code>int  (*open_func_t)   (void);</code></li>
+<li><strong>Description</strong>: this function is called once - on the start of the web server. If it returns 
+-1 then execution stopped. </li>
+</ul>
+<h4 id="lowlevel_api-take">lowlevel_api::take</h4>
+<ul>
+<li><strong>Type</strong> :<code>int  (*take_func_t)   (void);</code></li>
+<li><strong>Description</strong>: this function is called before processing a POST request - if it returns -1 then 
+the request is dropped.</li>
+</ul>
+<h4 id="lowlevel_api-close">lowlevel_api::close</h4>
+<ul>
+<li><strong>Type</strong> :<code>void  (*close_func_t)   (void);</code></li>
+<li><strong>Description</strong>: this function is called on server shutdown. (really ?)</li>
+</ul>
+<h4 id="lowlevel_api-release">lowlevel_api::release</h4>
+<ul>
+<li><strong>Type</strong> :<code>void (*release_func_t)   (void);</code></li>
+<li><strong>Description</strong>:  this function is called after every POST request.</li>
+</ul>
+<h4 id="lowlevel_api-name">lowlevel_api::name</h4>
+<ul>
+<li><strong>Description</strong>: Purely informational filed, not used anywhere, <em>could be omitted</em>.</li>
+</ul>
+<h3 id="example">Example</h3>
+<pre><code class="lang-C"><div class="highlight"><pre><span class="nx">struct</span> <span class="nx">lowlevel_api</span> <span class="nx">dummy_api</span> <span class="o">=</span> <span class="p">{</span>
+
+    <span class="p">.</span><span class="nx">reg_write</span> <span class="o">=</span> <span class="nx">dummy_write_register</span><span class="p">,</span>
+    <span class="p">.</span><span class="nx">reg_read</span> <span class="o">=</span> <span class="nx">dummy_read_register</span><span class="p">,</span>
+
+    <span class="p">.</span><span class="nx">mem_write</span> <span class="o">=</span> <span class="nx">dummy_write_memory</span><span class="p">,</span>
+    <span class="p">.</span><span class="nx">mem_read</span> <span class="o">=</span> <span class="nx">dummy_read_memory</span><span class="p">,</span>
+
+    <span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="s2">&quot;dummy api&quot;</span>
+<span class="p">};</span>
+
+<span class="nx">struct</span> <span class="nx">lowlevel_api</span> <span class="o">*</span><span class="nx">API</span> <span class="o">=</span>  <span class="o">&amp;</span><span class="nx">dummy_api</span><span class="p">;</span>
+</pre></div>
+
+</code></pre>
+<ol>
+<li>We set all the needed fields to our functions.</li>
+<li>We set the <code>API</code> pointer to the needed &quot;low level api&quot; structure.</li>
+<li>That&#39;s all !</li>
+</ol>
+<p>The api&#39;s are exported through the <code>API</code> object so setting it to a valid pointer it&#39;s a must.</p>
+</div></body></html>

@@ -1,0 +1,68 @@
+<html><head><meta charset="UTF-8"><link type="text/css" rel="stylesheet" href="style.css"></head><body><div class="container"><p><a href="index.html"><strong>&lt; Back</strong></a></p>
+<h1 id="ui-tutorial">UI Tutorial</h1>
+<p>This is a tutorial that describes the facilities offered by the web interface.</p>
+<p><img src="images/editor.png" alt="screen shot"></p>
+<p>This project allows to interact with a board remotely. You can write a script 
+specifying how the interaction should take place. The script should be written 
+in the window <strong>#2</strong>. The output of the script will be displayed in the window
+<strong>#3</strong>, the operation that is now running is placed in the window <strong>#4</strong>. If the log
+output is too verbose it could be filtered with a regular expression typed in window <strong>#1</strong>.</p>
+<p>The window <strong>#3</strong> have several &quot;modes&quot; :</p>
+<ul>
+<li><strong>Script debug</strong> - quite verbose output, it informs what file was run, what has it exported and so on.</li>
+<li><strong>Chip debug</strong> - less verbose output, the only data that will appear will be the data printed by the script.</li>
+<li><strong>Console</strong>    - an interactive console.</li>
+</ul>
+<p>The modes are changed by clicking on the tabs located at he top of window <strong>#3</strong>.
+To clear the window <strong>#3</strong>, the button &quot;Clear&quot; should be pressed.</p>
+<h4 id="buttons-left-to-right">Buttons left to right</h4>
+<ul>
+<li><strong>File</strong> : opens a drop down menu, where you can choose one of the following actions:<ul>
+<li><strong>Open file</strong>: open a file in the text editor.</li>
+<li><strong>Create file</strong>: create a file in the text editor. </li>
+<li><strong>Download</strong>: download the currently viewed document.</li>
+<li><strong>Save locally</strong>: save the contents of the edited documents to the browser, using HTML5 local-storage.</li>
+<li><strong>To clipboard</strong> : copy to clipboard the currently viewed document.</li>
+<li><strong>Close</strong> : close the current document.</li>
+<li><strong>Rename</strong> : rename the current document.</li>
+</ul>
+</li>
+<li><strong>Run</strong>: runs the current document.</li>
+</ul>
+<h4 id="types-of-documents-files-">Types of documents (files)</h4>
+<p>There are two types of documents (files) recognized by the environment :</p>
+<ul>
+<li>Text documents</li>
+<li>Script documents</li>
+</ul>
+<p>The difference is that text documents are made to keep data, so no highlighting is done while viewing them, 
+but script documents are made to keep code so they are highlighted. You can execute a text document but you&#39;ll
+get an error. Text documents are useful when manipulating data.</p>
+<p>main.js:</p>
+<pre><code class="lang-javascript"><div class="highlight"><pre><span class="kd">var</span> <span class="nx">api</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">&quot;api&quot;</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">doc</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">&quot;documents&quot;</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">board</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">&quot;sam3x&quot;</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">arr</span> <span class="o">=</span> <span class="nx">doc</span><span class="p">.</span><span class="nx">get_data</span><span class="p">(</span><span class="s2">&quot;big-array.csv&quot;</span><span class="p">).</span><span class="nx">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">);</span>
+
+<span class="k">if</span><span class="p">(</span><span class="nx">arr</span><span class="p">.</span><span class="nx">lenght</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="o">||</span> <span class="nx">arr</span><span class="p">.</span><span class="nx">length</span> <span class="o">&gt;</span> <span class="nx">board</span><span class="p">.</span><span class="nx">FLASH_SIZE</span> <span class="p">)</span> 
+    <span class="k">throw</span><span class="p">(</span><span class="s2">&quot;Bad csv data&quot;</span><span class="p">);</span>
+
+<span class="nx">api</span><span class="p">.</span><span class="nx">mem</span><span class="p">.</span><span class="nx">write</span><span class="p">(</span><span class="nx">board</span><span class="p">.</span><span class="nx">FLASH_START</span><span class="p">,</span> <span class="nx">arr</span><span class="p">);</span>    
+<span class="p">......</span>
+</pre></div>
+
+</code></pre>
+<p>sam3x.js:</p>
+<pre><code class="lang-javascript"><div class="highlight"><pre><span class="nx">exports</span><span class="p">.</span><span class="nx">FLASH_START</span> <span class="o">=</span> <span class="mh">0x00a0000</span>
+<span class="nx">exports</span><span class="p">.</span><span class="nx">FLASH_END</span> <span class="o">=</span> <span class="mh">0x00aFFFF</span>
+<span class="nx">exports</span><span class="p">.</span><span class="nx">FLASH_SIZE</span> <span class="o">=</span> <span class="nx">exports</span><span class="p">.</span><span class="nx">FLASH_END</span> <span class="o">-</span> <span class="nx">exports</span><span class="p">.</span><span class="nx">FLASH_START</span><span class="p">;</span>
+<span class="p">......</span>
+</pre></div>
+
+</code></pre>
+<p>big-array.csv:</p>
+<pre><code class="lang-javascript"><div class="highlight"><pre><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">4444</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">5</span> <span class="p">.....</span>
+</pre></div>
+
+</code></pre>
+</div></body></html>

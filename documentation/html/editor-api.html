@@ -1,0 +1,280 @@
+<html><head><meta charset="UTF-8"><link type="text/css" rel="stylesheet" href="style.css"></head><body><div class="container"><p><a href="index.html"><strong>&lt; Back</strong></a></p>
+<h1 id="editor-api">Editor API</h1>
+<h2 id="built-in-functions">Built-in functions</h2>
+<h4 id="-reqire-library-"><code>reqire(library)</code></h4>
+<ul>
+<li><p><strong>Description</strong>: You can access api functions by <code>require()</code> ing a certain library.
+Also you can <code>require()</code> a <em>script</em> file opened in the editor, the <code>.js</code> extension could be omitted.</p>
+</li>
+<li><p><strong>Arguments</strong>:</p>
+<ul>
+<li><code>library</code>  [<em>String</em>]  - the library which should be required</li>
+</ul>
+</li>
+<li><p><strong>Return Value</strong>  [<em>Object</em>]   - the <em>exports</em> object of the library.</p>
+</li>
+</ul>
+<pre><code class="lang-javascript"><div class="highlight"><pre><span class="kd">var</span> <span class="nx">foolib</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">&quot;foo-lib&quot;</span><span class="p">);</span>
+</pre></div>
+
+</code></pre>
+<h4 id="-exports-"><code>exports</code></h4>
+<ul>
+<li><strong>Description</strong>: All library functions and variables are exported through the <em>exports</em> Object.
+By default <code>exports == {}</code>.</li>
+</ul>
+<h4 id="examples">examples</h4>
+<pre><code class="lang-javascript"><div class="highlight"><pre><span class="cm">/* CatzLib.js */</span>
+<span class="kd">var</span> <span class="nx">log</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;logger&#39;</span><span class="p">);</span>
+
+<span class="nx">exports</span><span class="p">.</span><span class="nx">greet</span> <span class="o">=</span> <span class="nx">fucntion</span><span class="p">(</span><span class="nx">what</span><span class="p">)</span> <span class="p">{</span>    
+    <span class="nx">log</span><span class="p">.</span><span class="nx">info</span><span class="p">(</span><span class="s2">&quot;Meow &quot;</span> <span class="o">+</span> <span class="nx">what</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="cm">/* Sctript.js */</span>
+
+<span class="kd">var</span> <span class="nx">cat</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">&quot;CatzLib&quot;</span><span class="p">);</span>
+
+<span class="nx">cat</span><span class="p">.</span><span class="nx">greet</span><span class="p">(</span><span class="s2">&quot;John&quot;</span><span class="p">);</span>  <span class="c1">// Will output &quot;Meow John&quot;</span>
+</pre></div>
+
+</code></pre>
+<h2 id="helper-libraries">Helper libraries</h2>
+<h3 id="logger">logger</h3>
+<p>The logger functions allow you to log information in the logger window,
+there are three functions witch accept one argument - a <em>string</em> to be logged on the window.
+You can also pass an object which will be converted to a string.</p>
+<h4 id="-logger-dir-object-options-"><code>logger.dir(object, options)</code></h4>
+<ul>
+<li><strong>Description</strong>: Converts an object to a string.    </li>
+<li><strong>Arguments</strong>:    <ul>
+<li><code>object</code>  [<em>Object</em>]  - the object which should be converted.</li>
+<li><code>options</code> [<em>Object</em>]  - an options object. It&#39;s fields include:<ul>
+<li><code>radix</code> [<em>Number</em>] - the base to witch numbers in the object should be converted. By default 10.</li>
+<li><code>depth</code> [<em>Number</em>] - the maximum depth of the object, if set to -1, ignored. By default 16.</li>
+<li><code>tab</code>      [<em>String</em>] - the tab character used when the data is outputted.</li>
+<li><code>nl</code>      [<em>String</em>] - the new line character used when the data is outputted.</li>
+<li><code>index</code> [<em>Boolean</em>]- if set to true - output an index before each <em>Array</em> element commented out with c-style comments. <em>WARNING!</em> no comments are allowed in the JSON notation.              </li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>Return Value</strong> [<em>String</em>]   - a string representation of <em>object</em>.</li>
+</ul>
+<h4 id="-logger-info-message-"><code>logger.info(message)</code></h4>
+<h4 id="-logger-error-message-"><code>logger.error(message)</code></h4>
+<h4 id="-logger-warn-message-"><code>logger.warn(message)</code></h4>
+<ul>
+<li><strong>Description</strong>: Logs a <em>message</em> with appropriate priority.</li>
+<li><strong>Arguments</strong>:    <ul>
+<li>message [<em>Anything</em>] - a message which should be logged.</li>
+</ul>
+</li>
+</ul>
+<pre><code class="lang-javascript"><div class="highlight"><pre><span class="kd">var</span> <span class="nx">log</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;logger&#39;</span><span class="p">),</span>
+
+<span class="nx">log</span><span class="p">.</span><span class="nx">info</span><span class="p">(</span><span class="s2">&quot;Hello World&quot;</span><span class="p">);</span>
+<span class="nx">log</span><span class="p">.</span><span class="nx">info</span><span class="p">({</span><span class="s2">&quot;hello&quot;</span><span class="o">:</span><span class="s2">&quot;word&quot;</span><span class="p">});</span>
+</pre></div>
+
+</code></pre>
+<h3 id="documents">documents</h3>
+<p>The documents functions allow you to manipulate file contests.
+The files should be opened in the editor.</p>
+<h4 id="-documents-list-"><code>documents.list()</code></h4>
+<ul>
+<li><strong>Description</strong>: Lists all the available documents. (a little bit useless)    </li>
+<li>returns [<em>Array</em>] - an array of strings.</li>
+</ul>
+<h4 id="-documents-get_data-docname-"><code>documents.get_data(docname)</code></h4>
+<ul>
+<li><strong>Description</strong>: Gets the contests of a document.</li>
+<li><strong>Arguments</strong>:    <ul>
+<li><code>docname</code> [<em>String</em>] - a name of the document.</li>
+</ul>
+</li>
+<li><strong>Return Value</strong> - the contests of the document (<em>docname</em>).</li>
+</ul>
+<h4 id="-documents-set_data-docname-data-"><code>documents.set_data(docname, data)</code></h4>
+<ul>
+<li><strong>Description</strong>: Sets the contests of a document.</li>
+<li><strong>Arguments</strong>:    <ul>
+<li><code>docname</code> [<em>String</em>] - a name of the document.</li>
+<li><code>data</code>       [<em>String</em>] - data which should be written to <em>docname</em>.</li>
+</ul>
+</li>
+</ul>
+<pre><code class="lang-javascript"><div class="highlight"><pre><span class="kd">var</span> <span class="nx">docs</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;documents&#39;</span><span class="p">);</span>
+
+<span class="cm">/* Get the names of all the opened files */</span>
+<span class="kd">var</span> <span class="nx">docNames</span> <span class="o">=</span> <span class="nx">docs</span><span class="p">.</span><span class="nx">list</span><span class="p">();</span>
+
+<span class="cm">/* Get the data from great-file.txt (it should be opened in the editor) */</span>
+<span class="kd">var</span> <span class="nx">greatData</span> <span class="o">=</span> <span class="nx">docs</span><span class="p">.</span><span class="nx">get_data</span><span class="p">(</span><span class="s2">&quot;great-file.txt&quot;</span><span class="p">)</span>              
+
+<span class="cm">/* Append the data to great-file.txt (it should be opened in the editor) */</span>
+<span class="nx">docs</span><span class="p">.</span><span class="nx">set_data</span><span class="p">(</span><span class="s2">&quot;great-file.txt&quot;</span><span class="p">,</span> <span class="nx">greatData</span> <span class="o">+</span> <span class="s2">&quot; End Of Great File&quot;</span><span class="p">)</span>
+</pre></div>
+
+</code></pre>
+<h3 id="underscore-js">Underscore.js</h3>
+<p>For complex javascript operations a helper library could be included - <a href="http://underscorejs.org/">underscore.js</a></p>
+<pre><code class="lang-javascript"><div class="highlight"><pre><span class="kd">var</span> <span class="nx">_</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">obj</span> <span class="o">=</span> <span class="p">{</span> 
+    <span class="nx">dogs</span> <span class="o">:</span> <span class="s2">&quot;bark&quot;</span>
+<span class="p">}</span>
+
+<span class="nx">_</span><span class="p">.</span><span class="nx">extend</span><span class="p">(</span><span class="nx">obj</span><span class="p">,</span> <span class="p">{</span>
+    <span class="nx">hello</span> <span class="o">:</span> <span class="s2">&quot;word&quot;</span><span class="p">,</span>
+    <span class="nx">cats</span>  <span class="o">:</span> <span class="s2">&quot;jump&quot;</span>
+<span class="p">});</span>
+
+<span class="c1">// obj is now { dogs : &quot;bark&quot;, cats : &quot;jump&quot;, hello : &quot;word&quot; }</span>
+</pre></div>
+
+</code></pre>
+<h2 id="server-interaction-libraries">Server interaction libraries</h2>
+<p>The <em>api</em> library allows you to send and recive data from and to the server.
+You can require the <em>api</em> library in the following way:</p>
+<pre><code class="lang-javascript"><div class="highlight"><pre><span class="kd">var</span> <span class="nx">api</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;api&#39;</span><span class="p">);</span>
+
+<span class="nx">api</span><span class="p">.</span><span class="nx">mem</span><span class="p">.</span><span class="nx">write</span><span class="p">(</span><span class="mh">0x11</span><span class="p">,</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">56</span><span class="p">]);</span>
+</pre></div>
+
+</code></pre>
+<h3 id="api-mem">api.mem</h3>
+<p>The <em>api.mem</em> set of functions allows you to interact with the memory of the microprocessor.</p>
+<h4 id="-api-mem-read-address-callback-"><code>api.mem.read(address, callback)</code></h4>
+<ul>
+<li><strong>Description</strong>: Reads a memory location.</li>
+<li><p><strong>Arguments</strong>:    </p>
+<ul>
+<li><code>address</code>  [<em>Number</em>]  - a memory address from where data should be read.</li>
+<li><code>callback</code> [<em>Function</em>]- a callback function which will be called when the operation will complete.
+The function should take two arguments - <em>err</em> and <em>res</em>, if an error occurs
+the <em>err</em> argument is filled with an error message otherwise the result is 
+stored in the <em>res</em> argument.</li>
+</ul>
+</li>
+<li><p><strong>Return Value</strong>  [<em>Array</em>]   - the function returns the result of the memory read to the given location. 
+The return value is equal to the <em>res</em> argument of <em>callback</em>.</p>
+</li>
+</ul>
+<h4 id="-api-mem-write-address-data-callback-"><code>api.mem.write(address, data, callback)</code></h4>
+<ul>
+<li><strong>Description</strong>: Writes a memory location.</li>
+<li><p><strong>Arguments</strong>:</p>
+<ul>
+<li><code>address</code>  [<em>Number</em>]  - a memory address where data should be written.</li>
+<li><code>data</code>       [<em>Array</em>]     - data which should be written to the <em>address</em>.</li>
+<li><code>callback</code> [<em>Function</em>]- a callback function which will be called when the operation will complete.
+The function should take two arguments - <em>err</em> and <em>res</em>, if an error occurs
+the <em>err</em> argument is filled with an error message otherwise the result is 
+stored in the <em>res</em> argument.</li>
+</ul>
+</li>
+<li><p><strong>Return Value</strong> [<em>String</em>]   - the function returns the result of the memory read to the given location. 
+The return value is equal to the <em>res</em> argument of <em>callback</em>.</p>
+</li>
+<li><p><strong>Notes</strong> : A successful write returns a <em>&quot;success&quot;</em> string.</p>
+</li>
+</ul>
+<h3 id="examples">examples</h3>
+<pre><code class="lang-javascript"><div class="highlight"><pre><span class="kd">var</span> <span class="nx">SOME_ADDR</span> <span class="o">=</span> <span class="mh">0x4356</span><span class="p">;</span>
+<span class="kd">var</span> <span class="nx">data</span> <span class="o">=</span> <span class="p">[</span><span class="mh">0x1</span><span class="p">,</span> <span class="mh">0x2</span><span class="p">,</span> <span class="mh">0x3</span><span class="p">,</span> <span class="mh">0x4</span><span class="p">,</span> <span class="mh">0x5</span><span class="p">];</span>
+
+<span class="kd">var</span> <span class="nx">api</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;api&#39;</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">log</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;logger&#39;</span><span class="p">);</span>
+
+<span class="nx">api</span><span class="p">.</span><span class="nx">mem</span><span class="p">.</span><span class="nx">write</span><span class="p">(</span><span class="nx">SOME_ADDR</span><span class="p">,</span> <span class="nx">mem_data</span><span class="p">);</span>
+<span class="nx">data</span> <span class="o">=</span> <span class="nx">api</span><span class="p">.</span><span class="nx">mem</span><span class="p">.</span><span class="nx">read</span><span class="p">(</span><span class="nx">SOME_ADDR</span><span class="o">+</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">);</span>
+
+<span class="nx">log</span><span class="p">.</span><span class="nx">info</span><span class="p">(</span><span class="s2">&quot;mem.read result = &quot;</span> <span class="o">+</span>    <span class="nx">log</span><span class="p">.</span><span class="nx">dir</span><span class="p">(</span><span class="nx">data</span><span class="p">));</span> <span class="c1">// Should output &quot;mem.read result = [0x3, 0x4]&quot;</span>
+</pre></div>
+
+</code></pre>
+<hr>
+<h3 id="api-reg">api.reg</h3>
+<p>The <em>api.reg</em> set of functions allows you to interact with the registers of the microprocessor.</p>
+<h4 id="-api-reg-read-register-callback-"><code>api.reg.read(register, callback)</code></h4>
+<ul>
+<li><strong>Description</strong>: Reads a register.</li>
+<li><p><strong>Arguments</strong>:</p>
+<ul>
+<li><code>register</code> [<em>Number</em>] - a register from where data should be read.</li>
+<li><code>callback</code> [<em>Function</em>]- a callback function which will be called when the operation will complete.
+The function should take two arguments - <em>err</em> and <em>res</em>, if an error occurs
+the <em>err</em> argument is filled with an error message otherwise the result is 
+stored in the <em>res</em> argument.</li>
+</ul>
+</li>
+<li><p><strong>Return Value</strong> [<em>Number</em>]  - the function returns the result of the register read. 
+The return value is equal to the <em>res</em> argument of <em>callback</em>.</p>
+</li>
+</ul>
+<h4 id="-api-reg-write-register-data-callback-"><code>api.reg.write(register, data, callback)</code></h4>
+<ul>
+<li><strong>Description</strong>: Writes a register.</li>
+<li><strong>Arguments</strong>:<ul>
+<li><code>register</code> [<em>Number</em>]  - a register where data should be written.</li>
+<li><code>data</code>       [<em>Number</em>]     - data which should be written to the <em>register</em>.</li>
+<li><code>callback</code> [<em>Function</em>]- a callback function which will be called when the operation will complete.
+The function should take two arguments - <em>err</em> and <em>res</em>, if an error occurs
+the <em>err</em> argument is filled with an error message otherwise the result is 
+stored in the <em>res</em> argument.    </li>
+</ul>
+</li>
+<li><strong>Return Value</strong> [<em>String</em>]   - the function returns the result of the register read. 
+The return value is equal to the <em>res</em> argument of <em>callback</em>.                  </li>
+<li><strong>Notes</strong> : A successful write returns a <em>&quot;success&quot;</em> string.</li>
+</ul>
+<h4 id="-api-poll-register-mask-value-ntimes-"><code>api.poll(register, mask, value, ntimes)</code></h4>
+<ul>
+<li><strong>Description</strong>: Polls a register.</li>
+<li><strong>Arguments</strong>:<ul>
+<li><code>register</code> [<em>Number</em>]  - a register which should be polled.</li>
+<li><code>mask</code>   [<em>Number</em>]     - a mask which should be applied to <em>register</em>, and <em>value</em>.</li>
+<li><code>value</code> [<em>Number</em>] - value witch is expected at <em>register</em>.</li>
+<li><code>ntimes</code> [<em>Number</em>] - count of times functions should be run, default 50.</li>
+</ul>
+</li>
+<li><strong>Return Value</strong> [<em>None</em>]   - the function do not return any value.</li>
+<li><strong>Notes</strong> : <strong>!!this function may hang your browser!!</strong> this function is implemented on the client side the main loop looks like this<pre><code class="lang-javascript"><div class="highlight"><pre><span class="p">{</span>
+  <span class="nx">reg_val</span> <span class="o">=</span> <span class="nx">api</span><span class="p">.</span><span class="nx">reg</span><span class="p">.</span><span class="nx">read</span><span class="p">(</span><span class="nx">address</span><span class="p">);</span>
+<span class="p">}</span> <span class="k">while</span><span class="p">((</span><span class="nx">reg_val</span> <span class="o">&amp;</span> <span class="nx">mask</span><span class="p">)</span> <span class="o">!=</span> <span class="p">(</span><span class="nx">value</span> <span class="o">&amp;</span> <span class="nx">mask</span><span class="p">));</span>
+</pre></div>
+
+</code></pre>
+</li>
+</ul>
+<h4 id="-api-wait-address-mask-value-callback-delay-ntimes-"><code>api.wait(address, mask, value, callback, delay, ntimes)</code></h4>
+<ul>
+<li><strong>Description</strong>: Polls a register, but uses timers, <em>callback</em> is madnatory.</li>
+<li><strong>Arguments</strong>:<ul>
+<li><code>register</code> [<em>Number</em>]  - a register which should be polled.</li>
+<li><code>mask</code>   [<em>Number</em>]     - a mask which should be applied to <em>register</em>, and <em>value</em>.</li>
+<li><code>value</code> [<em>Number</em>] - value witch is expected at <em>register</em>.</li>
+<li><code>callback</code> [<em>Function</em>] - the callback function called upon success, its sole argument is the value
+of the polled register after the last read.</li>
+<li><code>delay</code> [<em>Number</em>] - number of milliseconds to wait until next poll.</li>
+<li><code>ntimes</code> [<em>Number</em>] - count of times functions should be run, default 50. If a negative 
+value is specified then the function will be run until success.    </li>
+</ul>
+</li>
+<li><strong>Return Value</strong> [<em>None</em>]   - the function do not return any value.</li>
+</ul>
+<h3 id="examples">examples</h3>
+<pre><code class="lang-javascript"><div class="highlight"><pre><span class="kd">var</span> <span class="nx">SOME_REG</span> <span class="o">=</span> <span class="mi">12</span><span class="p">;</span>
+<span class="kd">var</span> <span class="nx">data</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span>
+
+<span class="kd">var</span> <span class="nx">api</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;api&#39;</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">log</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;logger&#39;</span><span class="p">);</span>
+
+<span class="nx">api</span><span class="p">.</span><span class="nx">reg</span><span class="p">.</span><span class="nx">write</span><span class="p">(</span><span class="nx">SOME_REG</span><span class="p">,</span> <span class="nx">data</span><span class="p">);</span>
+<span class="nx">data</span> <span class="o">=</span> <span class="nx">api</span><span class="p">.</span><span class="nx">reg</span><span class="p">.</span><span class="nx">read</span><span class="p">(</span><span class="nx">SOME_REG</span><span class="p">);</span>
+
+<span class="nx">log</span><span class="p">.</span><span class="nx">info</span><span class="p">(</span><span class="s2">&quot;reg.read result = &quot;</span> <span class="o">+</span>    <span class="nx">data</span><span class="p">);</span> <span class="c1">// Should output &quot;mem.read result = 5&quot;</span>
+</pre></div>
+
+</code></pre>
+</div></body></html>
