@@ -9,7 +9,7 @@
   "author": "",
   "license": "BSD",
   "dependencies": {
-    "request": "~2.40.0",
+    "request": "~2.88.2",
     "chai": "~1.9.1"
   }
 }
